@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-onetrust-cmp" version="202609.1.0"
+    xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>OneTrust</name>
+    <js-module name="OneTrust" src="www/OneTrust.js">
+        <clobbers target="OneTrust" />
+        <merges target="cordova.plugins.OneTrust" />
+    </js-module>
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="OneTrust">
+                <param name="ios-package" value="OneTrust" />
+            </feature>
+        </config-file>
+        <source-file src="src/ios/OneTrust.swift" />
+    <podspec>
+        <config>
+        </config>
+        <pods use-frameworks="true">
+            <pod name="OneTrust-CMP-XCFramework" spec="~> 202609.1.0.0" />
+        </pods>
+    </podspec>
+    </platform>
+    <platform name="android">
+        <framework src="com.onetrust.cmp:native-sdk:202609.1.0.0" />
+        <framework src="androidx.appcompat:appcompat:1.2.0" />
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="OneTrust">
+                <param name="android-package" value="com.onetrust.cordova.OneTrust" />
+            </feature>
+        </config-file>
+        <config-file parent="/manifest/application" target="AndroidManifest.xml">
+            <activity android:launchMode="singleTop" android:name="com.onetrust.cordova.CMPActivity" android:theme="@style/Theme.AppCompat.Dialog" />
+        </config-file>
+        <source-file src="src/android/OneTrust.java" target-dir="src/com/onetrust/cordova/" />
+        <source-file src="src/android/CMPActivity.java" target-dir="src/com/onetrust/cordova" />
+        <source-file src="src/android/activity_c_m_p.xml" target-dir="res/layout" />
+    </platform>
+</plugin>
