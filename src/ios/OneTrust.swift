@@ -1,7 +1,7 @@
 import Foundation
 import OTPublishersHeadlessSDK
 import AppTrackingTransparency
-
+ 
 @objc(OneTrust) class OneTrust : CDVPlugin{
     // MARK: Properties
     var OneTrustVC:UIViewController?
@@ -30,7 +30,7 @@ import AppTrackingTransparency
         if let paramsData = command.argument(at: 3) as? NSDictionary{
             initParams = buildSDKParams(withParamsObject: paramsData)
         }
-
+ 
         OTPublishersHeadlessSDK.shared.startSDK(storageLocation: storageLocation,
                                                 domainIdentifier: domainIdentifier,
                                                 languageCode: languageCode,
@@ -68,7 +68,7 @@ import AppTrackingTransparency
             OTParams.setProfileSyncParams(profileSyncParams)
             OTParams.setShouldCreateProfile("true")
         }
-
+ 
         //If setAPIVersion is defined, add it to the params object.
         if let overrideVersion = params.value(forKey: "setAPIVersion") as? String{
             OTParams.setSDKVersion(overrideVersion)
@@ -120,7 +120,7 @@ import AppTrackingTransparency
                  been shown, this will just resolve immediately with the user's previously-selected status.
                 */
             OTPublishersHeadlessSDK.shared.showConsentUI(for: permissionType, from: vc){ [weak self] in
-                pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: self?.getATTStatusAsString())
+              pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: (self?.getATTStatusAsString())!)
                 self?.returnToCordova(pluginResult: pluginResult, command: command)
             }
         }else{
@@ -207,7 +207,7 @@ import AppTrackingTransparency
         }
         self.returnToCordova(pluginResult: pluginResult, command: command)
     }
-
+ 
     @objc(getOTGoogleConsentModeData:)
     func getOTGoogleConsentModeData(_ command:CDVInvokedUrlCommand){
         var pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR)
@@ -229,7 +229,7 @@ import AppTrackingTransparency
                 "personalization_storage": personalizationStorageValue,
                 "security_storage": securityStorageValue
             ]
-
+ 
         pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: gcmOTDataJSONObject)
         self.returnToCordova(pluginResult: pluginResult, command: command)
     }
@@ -284,10 +284,10 @@ import AppTrackingTransparency
     
     private func returnToCordova(pluginResult: CDVPluginResult?, command:CDVInvokedUrlCommand){
         if pluginResult != nil{
-            self.commandDelegate!.send(pluginResult, callbackId: command.callbackId)
+          self.commandDelegate!.send(pluginResult!, callbackId: command.callbackId)
         }
     }
-
+ 
     // Add this private helper method
     private func fetchCmpApiData(
         fetcher: (@escaping ([String: Any]?) -> Void) -> Void,
@@ -306,7 +306,7 @@ import AppTrackingTransparency
             self.returnToCordova(pluginResult: pluginResult, command: command)
         }
     }
-
+ 
     @objc(fetchBannerCmpApiData:)
     func fetchBannerCmpApiData(_ command: CDVInvokedUrlCommand) {
         fetchCmpApiData(
@@ -315,7 +315,7 @@ import AppTrackingTransparency
             errorMessage: "No response from fetchBannerCmpApiData"
         )
     }
-
+ 
     @objc(fetchPreferencesCmpApiData:)
     func fetchPreferencesCmpApiData(_ command: CDVInvokedUrlCommand) {
         fetchCmpApiData(
@@ -324,7 +324,7 @@ import AppTrackingTransparency
             errorMessage: "No response from fetchPreferencesCmpApiData"
         )
     }
-
+ 
     @objc(fetchVendorsCmpApiData:)
     func fetchVendorsCmpApiData(_ command: CDVInvokedUrlCommand) {
         fetchCmpApiData(
@@ -333,7 +333,7 @@ import AppTrackingTransparency
             errorMessage: "No response from fetchVendorsCmpApiData"
         )
     }
-
+ 
     @objc(renameProfile:)
     func renameProfile(_ command: CDVInvokedUrlCommand) {
         let fromIdentifier = command.argument(at: 0) as? String
@@ -353,14 +353,14 @@ import AppTrackingTransparency
             self.returnToCordova(pluginResult: pluginResult, command: command)
         }
     }
-
+ 
     @objc(clearOTSDKData:)
     func clearOTSDKData(_ command: CDVInvokedUrlCommand){
         OTPublishersHeadlessSDK.shared.clearOTSDKData()
         self.returnToCordova(pluginResult: CDVPluginResult(status: CDVCommandStatus_OK), command: command)
     }
 }
-
+ 
 extension OneTrust:OTEventListener{
     func allSDKViewsDismissed(interactionType: ConsentInteractionType) {
         emit(eventName: "allSDKViewsDismissed")
